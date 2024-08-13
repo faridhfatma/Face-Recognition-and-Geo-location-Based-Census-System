@@ -1,0 +1,384 @@
+{% load static %}
+{% load humanize %}
+
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="{% static 'app/img/logo.svg' %}">
+    <title>PictoCensus - Home</title>
+    <!-- Simple bar CSS -->
+    <link rel="stylesheet" href="{% static 'app/css/simplebar.css' %}">
+    <!-- Fonts CSS -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Overpass:ital,wght@0,100;0,200;0,300;0,400;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,600;1,700;1,800;1,900&display=swap"
+        rel="stylesheet">
+    <!-- Icons CSS -->
+    <link rel="stylesheet" href="{% static 'app/css/feather.css' %}">
+    <link rel="stylesheet" href="{% static 'app/css/dataTables.bootstrap4.css' %}">
+    <link rel="stylesheet" href="{% static 'app/css/select2.css' %}">
+    <link rel="stylesheet" href="{% static 'app/css/dropzone.css' %}">
+    <link rel="stylesheet" href="{% static 'app/css/uppy.min.css' %}">
+    <link rel="stylesheet" href="{% static 'app/css/jquery.steps.css' %}">
+    <link rel="stylesheet" href="{% static 'app/css/jquery.timepicker.css' %}">
+    <link rel="stylesheet" href="{% static 'app/css/quill.snow.css' %}">
+    <!-- Date Range Picker CSS -->
+    <link rel="stylesheet" href="{% static 'app/css/daterangepicker.css' %}">
+    <!-- App CSS -->
+    <link rel="stylesheet" href="{% static 'app/css/app-light.css' %}" id="lightTheme">
+    <link rel="stylesheet" href="{% static 'app/css/app-dark.css' %}" id="darkTheme" disabled>
+</head>
+
+<body class="vertical  light  ">
+    <div class="wrapper">
+        <nav class="topnav navbar navbar-light">
+            <button type="button" class="navbar-toggler text-muted mt-2 p-0 mr-3 collapseSidebar">
+                <i class="fe fe-menu navbar-toggler-icon"></i>
+            </button>
+
+            <ul class="nav">
+                <li class="nav-item">
+                    <a class="nav-link text-muted my-2" href="#" id="modeSwitcher" data-mode="light">
+                        <i class="fe fe-sun fe-16"></i>
+                    </a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle text-muted pr-0" href="#" id="navbarDropdownMenuLink"
+                        role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <span class="avatar avatar-sm mt-2">
+                            <img src="{% static 'app/img/avatar.png' %}" alt="..." class="avatar-img rounded-circle">
+                        </span>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
+                        <a class="dropdown-item" href="{% url 'logout' %}">Logout</a>
+                    </div>
+                </li>
+            </ul>
+        </nav>
+        <aside class="sidebar-left border-right bg-white shadow" id="leftSidebar" data-simplebar>
+            <a href="#" class="btn collapseSidebar toggle-btn d-lg-none text-muted ml-2 mt-3" data-toggle="toggle">
+                <i class="fe fe-x"><span class="sr-only"></span></i>
+            </a>
+            <nav class="vertnav navbar navbar-light">
+                <!-- nav bar -->
+                <div class="w-100 mb-4 d-flex">
+                    <a class="navbar-brand mx-auto mt-2 flex-fill text-center" href="admin">
+                        <img src="{% static 'app/img/logo.svg' %}" alt="" style="width: 25%;">
+                    </a>
+                </div>
+                <ul class="navbar-nav flex-fill w-100 mb-2">
+                    <li class="nav-item w-100">
+                        <a class="nav-link" href="admin">
+                            <i class="fe fe-home fe-16"></i>
+                            <span class="ml-3 item-text">Dashboard</span>
+                        </a>
+                    </li>
+                </ul>
+                <p class="text-muted nav-heading mt-4 mb-1">
+                    <span>Management</span>
+                </p>
+                <ul class="navbar-nav flex-fill w-100 mb-2">
+                    <li class="nav-item w-100">
+                        <a class="nav-link" href="admin/enumerator">
+                            <i class="fe fe-user-check fe-16"></i>
+                            <span class="ml-3 item-text">Enumerators</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </aside>
+        <main role="main" class="main-content">
+            <div class="container-fluid">
+                <div class="row justify-content-center">
+                    <div class="col-12">
+                        <div class="row">
+                            <div class="col-md-6 col-xl-3 mb-4">
+                                <div class="card shadow bg-primary text-white border-0">
+                                    <div class="card-body">
+                                        <div class="row align-items-center">
+                                            <div class="col-3 text-center">
+                                                <span class="circle circle-sm bg-primary-light">
+                                                    <i class="fe fe-16 fe-users text-white mb-0"></i>
+                                                </span>
+                                            </div>
+                                            <div class="col pr-0">
+                                                <p class="small text-muted mb-0">Number of Enumerations</p>
+                                                <span class="h5 mb-0 text-white">{{total_records|intcomma}}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-xl-3 mb-4">
+                                <div class="card shadow border-0">
+                                    <div class="card-body">
+                                        <div class="row align-items-center">
+                                            <div class="col-3 text-center">
+                                                <span class="circle circle-sm bg-primary">
+                                                    <i class="fe fe-16 fe-bar-chart-2 text-white mb-0"></i>
+                                                </span>
+                                            </div>
+                                            <div class="col pr-0">
+                                                <p class="small text-muted mb-0">Age Range</p>
+                                                <span class="h5 mb-0">{{age_range.min_age}} -
+                                                    {{age_range.max_age}}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-xl-3 mb-4">
+                                <div class="card shadow border-0">
+                                    <div class="card-body">
+                                        <div class="row align-items-center">
+                                            <div class="col-3 text-center">
+                                                <span class="circle circle-sm bg-primary">
+                                                    <i class="fe fe-16 fe-trending-up text-white mb-0"></i>
+                                                </span>
+                                            </div>
+                                            <div class="col">
+                                                <p class="small text-muted mb-0">Highest Income</p>
+                                                <div class="row align-items-center no-gutters">
+                                                    <div class="col-auto">
+                                                        <span
+                                                            class="h5 mr-2 mb-0">Kes.{{max_income|floatformat:2|intcomma}}</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-xl-3 mb-4">
+                                <div class="card shadow border-0">
+                                    <div class="card-body">
+                                        <div class="row align-items-center">
+                                            <div class="col-3 text-center">
+                                                <span class="circle circle-sm bg-primary">
+                                                    <i class="fe fe-16 fe-activity text-white mb-0"></i>
+                                                </span>
+                                            </div>
+                                            <div class="col">
+                                                <p class="small text-muted mb-0">AVG Income</p>
+                                                <span
+                                                    class="h5 mr-2 mb-0">Kes.{{average_income|floatformat:2|intcomma}}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div> <!-- end section -->
+                        <!-- info small box -->
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="card shadow mb-4">
+                                    <div class="card-body">
+                                        <div class="card-title">
+                                            <strong>Gender Distribution</strong>
+                                        </div>
+                                        <div class="row">
+                                            {% for record in records_by_gender %}
+                                            <div class="col-6 text-center">
+                                                <p class="text-muted mb-0">{{ record.gender }}</p>
+                                                <h4 class="mb-1">{{ record.total }}</h4>
+                                            </div>
+                                            {% endfor %}
+                                        </div>
+                                    </div> <!-- .card-body -->
+                                </div> <!-- .card -->
+                            </div> <!-- .col -->
+                            <div class="col-md-4">
+                                <div class="card shadow mb-4">
+                                    <div class="card-body">
+                                        <div class="card-title">
+                                            <strong>Education Levels Distribution</strong>
+                                        </div>
+                                        <div class="row">
+                                            {% for record in records_by_education_level %}
+                                            <div class="col-6 text-center">
+                                                <p class="text-muted mb-0">{{ record.education_level }}</p>
+                                                <h4 class="mb-1">{{ record.total }}</h4>
+                                            </div>
+                                            {% endfor %}
+                                        </div>
+                                    </div> <!-- .card-body -->
+                                </div> <!-- .card -->
+                            </div> <!-- .col -->
+                            <div class="col-md-4">
+                                <div class="card shadow mb-4">
+                                    <div class="card-body">
+                                        <div class="card-title">
+                                            <strong>Marital Statuses Distribution</strong>
+                                        </div>
+                                        <div class="row">
+                                            {% for record in records_by_marital_status %}
+                                            <div class="col-6 text-center">
+                                                <p class="text-muted mb-0">{{ record.marital_status }}</p>
+                                                <h4 class="mb-1">{{ record.total }}</h4>
+                                            </div>
+                                            {% endfor %}
+                                        </div>
+                                    </div> <!-- .card-body -->
+                                </div> <!-- .card -->
+                            </div> <!-- .col -->
+                            <div class="col-md-9">
+                                <div class="card shadow mb-4">
+                                    <div class="card-body">
+                                        <div class="card-title">
+                                            <strong>Enumeration Data</strong>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-12">
+                                                {% if messages %}
+                                                <div class="col-12 mb-4">
+                                                    {% for message in messages %}
+                                                    <div class="alert {% if message.tags %}{{ message.tags }}{% endif %} alert-dismissible fade show"
+                                                        role="alert">
+                                                        {{ message }}
+                                                        <button type="button" class="close" data-dismiss="alert"
+                                                            aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                    </div>
+                                                    {% endfor %}
+                                                </div> <!-- /.col -->
+                                                {% endif %}
+                                            </div>
+                                            <div class="col-12">
+                                                <table class="table datatables" id="dataTable-1">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>#</th>
+                                                            <th>Name</th>
+                                                            <th>Phone</th>
+                                                            <th>Age</th>
+                                                            <th>Occupation</th>
+                                                            <th>Dependents</th>
+                                                            <th>Enumerator</th>
+                                                            <th>Image</th>
+                                                            <th>Action</th>
+                                                        </tr>
+                                                    </thead>
+
+                                                    <tbody>
+                                                        {% for user in user_data_records %}
+                                                        <tr>
+                                                            <td>{{ user.id }}</td>
+                                                            <td>{{ user.name }}</td>
+                                                            <td>{{ user.phone }}</td>
+                                                            <td>{{ user.age }}</td>
+                                                            <td>{{ user.occupation }}</td>
+                                                            <td>{{ user.number_of_dependents }}</td>
+                                                            <td>{{ user.user.first_name }} {{ user.user.last_name }}
+                                                            </td>
+                                                            <td>
+                                                                <div class="avatar avatar-md">
+                                                                    <img src="/app{{user.image}}" alt="..."
+                                                                        class="avatar-img rounded-circle">
+                                                                </div>
+                                                            </td>
+                                                            <td>
+                                                                <form
+                                                                    action="{% url 'admin-delete-enumeration' record_id=user.id %}"
+                                                                    method="post"
+                                                                    onsubmit="return confirm('Are you sure you want to delete this record?');">
+                                                                    {% csrf_token %}
+                                                                    <button type="submit"
+                                                                        class="btn btn-outline-danger px-2 py-2"><i
+                                                                            class="fe fe-trash-2"
+                                                                            aria-hidden="true"></i></button>
+                                                                </form>
+                                                            </td>
+                                                        </tr>
+                                                        {% endfor %}
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div> <!-- .row -->
+                                    </div> <!-- .card-body -->
+                                </div> <!-- .card -->
+                            </div> <!-- .col-md -->
+                            <div class="col-md-3">
+                                <div class="card shadow mb-4">
+                                    <div class="card-body">
+                                        <div class="card-title">
+                                            <strong>Region Summary</strong>
+                                        </div>
+                                        {% for record in records_grouped_by_region %}
+                                        <div class="row align-items-center h-100 my-2">
+                                            <div class="col">
+                                                <p class="mb-0">{{ record.region }}</p>
+                                            </div>
+                                            <div class="col-auto text-right">
+                                                <span>{{ record.total }}</span><br />
+                                                <div class="progress mt-2" style="height: 4px;">
+                                                    <div class="progress-bar" role="progressbar"
+                                                        style="width: {{ record.percentage|floatformat:2 }}%"
+                                                        aria-valuenow="85" aria-valuemin="0" aria-valuemax="100"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            </div> <!-- .col -->
+                        </div> <!-- / .row -->
+                    </div>
+                </div> <!-- .row -->
+            </div> <!-- .container-fluid -->
+
+        </main> <!-- main -->
+    </div> <!-- .wrapper -->
+    <script src="{% static 'app/js/jquery.min.js' %}"></script>
+    <script src="{% static 'app/js/popper.min.js' %}"></script>
+    <script src="{% static 'app/js/moment.min.js' %}"></script>
+    <script src="{% static 'app/js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'app/js/simplebar.min.js' %}"></script>
+    <script src="{% static 'app/js/daterangepicker.js' %}"></script>
+    <script src="{% static 'app/js/jquery.stickOnScroll.js' %}"></script>
+    <script src="{% static 'app/js/tinycolor-min.js' %}"></script>
+    <script src="{% static 'app/js/config.js' %}"></script>
+    <script src="{% static 'app/js/d3.min.js' %}"></script>
+    <script src="{% static 'app/js/topojson.min.js' %}"></script>
+    <script src="{% static 'app/js/datamaps.all.min.js' %}"></script>
+    <script src="{% static 'app/js/datamaps-zoomto.js' %}"></script>
+    <script src="{% static 'app/js/datamaps.custom.js' %}"></script>
+    <script src="{% static 'app/js/Chart.min.js' %}"></script>
+    <script>
+        /* defind global options */
+        Chart.defaults.global.defaultFontFamily = base.defaultFontFamily;
+        Chart.defaults.global.defaultFontColor = colors.mutedColor;
+    </script>
+    <script src="{% static 'app/js/gauge.min.js' %}"></script>
+    <script src="{% static 'app/js/jquery.sparkline.min.js' %}"></script>
+    <script src="{% static 'app/js/apexcharts.min.js' %}"></script>
+    <script src="{% static 'app/js/apexcharts.custom.js' %}"></script>
+    <script src="{% static 'app/js/jquery.mask.min.js' %}"></script>
+    <script src="{% static 'app/js/select2.min.js' %}"></script>
+    <script src="{% static 'app/js/jquery.steps.min.js' %}"></script>
+    <script src="{% static 'app/js/jquery.validate.min.js' %}"></script>
+    <script src="{% static 'app/js/jquery.timepicker.js' %}"></script>
+    <script src="{% static 'app/js/dropzone.min.js' %}"></script>
+    <script src="{% static 'app/js/uppy.min.js' %}"></script>
+    <script src="{% static 'app/js/quill.min.js' %}"></script>
+    <script src="{% static 'app/js/jquery.dataTables.min.js' %}"></script>
+    <script src="{% static 'app/js/dataTables.bootstrap4.min.js' %}"></script>
+    <script>
+        $('#dataTable-1').DataTable(
+            {
+                order: [[0, 'desc']],
+                autoWidth: true,
+                "lengthMenu": [
+                    [5, 10, 15, -1],
+                    [5, 10, 15, "All"]
+                ]
+            });
+    </script>
+    <script src="{% static 'app/js/apps.js' %}"></script>
+</body>
+
+</html>

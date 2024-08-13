@@ -1,0 +1,642 @@
+{% load static %}
+{% load humanize %}
+
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="{% static 'app/img/logo.svg' %}">
+    <title>PictoCensus - Home</title>
+    <!-- Simple bar CSS -->
+    <link rel="stylesheet" href="{% static 'app/css/simplebar.css' %}">
+    <!-- Fonts CSS -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Overpass:ital,wght@0,100;0,200;0,300;0,400;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,600;1,700;1,800;1,900&display=swap"
+        rel="stylesheet">
+    <!-- Icons CSS -->
+    <link rel="stylesheet" href="{% static 'app/css/feather.css' %}">
+    <link rel="stylesheet" href="{% static 'app/css/select2.css' %}">
+    <link rel="stylesheet" href="{% static 'app/css/dataTables.bootstrap4.css' %}">
+    <link rel="stylesheet" href="{% static 'app/css/select2.css' %}">
+    <link rel="stylesheet" href="{% static 'app/css/dropzone.css' %}">
+    <link rel="stylesheet" href="{% static 'app/css/uppy.min.css' %}">
+    <link rel="stylesheet" href="{% static 'app/css/jquery.steps.css' %}">
+    <link rel="stylesheet" href="{% static 'app/css/jquery.timepicker.css' %}">
+    <link rel="stylesheet" href="{% static 'app/css/quill.snow.css' %}">
+    <!-- Date Range Picker CSS -->
+    <link rel="stylesheet" href="{% static 'app/css/daterangepicker.css' %}">
+    <!-- App CSS -->
+    <link rel="stylesheet" href="{% static 'app/css/app-light.css' %}" id="lightTheme">
+    <link rel="stylesheet" href="{% static 'app/css/app-dark.css' %}" id="darkTheme" disabled>
+</head>
+
+<body class="vertical  light  ">
+    <div class="wrapper">
+        <nav class="topnav navbar navbar-light">
+            <button type="button" class="navbar-toggler text-muted mt-2 p-0 mr-3 collapseSidebar">
+                <i class="fe fe-menu navbar-toggler-icon"></i>
+            </button>
+
+            <ul class="nav">
+                <li class="nav-item">
+                    <a class="nav-link text-muted my-2" href="#" id="modeSwitcher" data-mode="light">
+                        <i class="fe fe-sun fe-16"></i>
+                    </a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle text-muted pr-0" href="#" id="navbarDropdownMenuLink"
+                        role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <span class="avatar avatar-sm mt-2">
+                            <img src="{% static 'app/img/avatar.png' %}" alt="..." class="avatar-img rounded-circle">
+                        </span>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
+                        <a class="dropdown-item" href="{% url 'logout' %}">Logout</a>
+                    </div>
+                </li>
+            </ul>
+        </nav>
+        <aside class="sidebar-left border-right bg-white shadow" id="leftSidebar" data-simplebar>
+            <a href="#" class="btn collapseSidebar toggle-btn d-lg-none text-muted ml-2 mt-3" data-toggle="toggle">
+                <i class="fe fe-x"><span class="sr-only"></span></i>
+            </a>
+            <nav class="vertnav navbar navbar-light">
+                <!-- nav bar -->
+                <div class="w-100 mb-4 d-flex">
+                    <a class="navbar-brand mx-auto mt-2 flex-fill text-center" href="{% url 'enumerator-dashboard' %}">
+                        <img src="{% static 'app/img/logo.svg' %}" alt="" style="width: 25%;">
+                    </a>
+                </div>
+                <ul class="navbar-nav flex-fill w-100 mb-2">
+                    <li class="nav-item w-100">
+                        <a class="nav-link" href="{% url 'enumerator-dashboard' %}">
+                            <i class="fe fe-home fe-16"></i>
+                            <span class="ml-3 item-text">Dashboard</span>
+                        </a>
+                    </li>
+                </ul>
+                <p class="text-muted nav-heading mt-4 mb-1">
+                    <span>Management</span>
+                </p>
+                <ul class="navbar-nav flex-fill w-100 mb-2">
+                    <li class="nav-item w-100">
+                        <a class="nav-link" href="{% url 'enumerator-search' %}">
+                            <i class="fe fe-search fe-16"></i>
+                            <span class="ml-3 item-text">Search</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </aside>
+        <main role="main" class="main-content">
+            <div class="container-fluid">
+                <div class="row justify-content-center">
+                    <div class="col-12">
+                        <div class="row">
+                            <div class="col-12 text-center">
+                                <p class="h1">My Total Enumerations</p>
+                                <h2 class="my-1">{{user_data_count|intcomma}}</h2>
+                            </div>
+                        </div> <!-- end section -->
+                        <!-- info small box -->
+                        <div class="row">
+                            <div class="col-6">
+                                {% if messages %}
+                                <div class="col-12 mb-4">
+                                    {% for message in messages %}
+                                    <div class="alert {% if message.tags %}{{ message.tags }}{% endif %} alert-dismissible fade show"
+                                        role="alert">
+                                        {{ message }} 
+
+                                        {% if form.errors %}
+                                            <div class="alert alert-danger">
+                                                {% comment %} <strong>Please correct the errors below:</strong> {% endcomment %}
+                                                <ul>
+                                                    {% for field, errors in form.errors.items %}
+                                                        {% for error in errors %}
+                                                            <li>{{ field }}: {{ error }}</li>
+                                                        {% endfor %}
+                                                    {% endfor %}
+                                                </ul>
+                                            </div>
+                                        {% endif %}
+
+                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    {% endfor %}
+                                </div> <!-- /.col -->
+                                {% endif %}
+                            </div>
+                            <div class="col-6">
+                                <button class="btn btn-primary float-right" data-toggle="modal"
+                                    data-target=".modal-full">Add New
+                                    Enumeration</button>
+                            </div>
+                        </div>
+                        <div class="row mt-3">
+
+                            <div class="col-md-12">
+                                <div class="card shadow mb-4">
+                                    <div class="card-body">
+                                        <div class="card-title">
+                                            <p class="h5">Enumeration Data</p>
+                                            <p class="text-muted">List of enumerations made</p>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-12">
+                                                <table class="table datatables" id="dataTable-1">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>#</th>
+                                                            <th>Name</th>
+                                                            <th>Phone</th>
+                                                            <th>Age</th>
+                                                            <th>Gender</th>
+                                                            <th>Marital Status</th>
+                                                            <th>Occupation</th>
+                                                            <th>Education</th>
+                                                            <th>Dependents</th>
+                                                            <th>Income (Kes)</th>
+                                                            <th>Image</th>
+                                                            <th>Action</th>
+                                                        </tr>
+                                                    </thead>
+
+                                                    <tbody>
+                                                        {% for data in user_data %}
+                                                        <tr>
+                                                            <td>{{data.id}}</td>
+                                                            <td>{{data.name}}</td>
+                                                            <td>{{data.phone}}</td>
+                                                            <td>{{data.age}}</td>
+                                                            <td>{{data.gender}}</td>
+                                                            <td>{{data.marital_status}}</td>
+                                                            <td>{{data.occupation}}</td>
+                                                            <td>{{data.education_level}}</td>
+                                                            <td>{{data.number_of_dependents}}</td>
+                                                            <td>{{data.income|floatformat:2|intcomma}}</td>
+                                                            <td>
+                                                                <div class="avatar avatar-md">
+                                                                    <img src="/app{{data.image}}" alt="..."
+                                                                        class="avatar-img rounded-circle">
+                                                                </div>
+                                                            </td>
+                                                            <td>
+                                                                <form
+                                                                    action="{% url 'enumerator_delete_enumeration_record' record_id=data.id %}"
+                                                                    method="post"
+                                                                    onsubmit="return confirm('Are you sure you want to delete this record?');">
+                                                                    {% csrf_token %}
+                                                                    <button type="submit"
+                                                                        class="btn btn-outline-danger  px-2 py-2"><i
+                                                                            class="fe fe-trash-2"
+                                                                            aria-hidden="true"></i></button>
+                                                                </form>
+                                                            </td>
+                                                        </tr>
+                                                        {% endfor %}
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div> <!-- .row -->
+                                    </div> <!-- .card-body -->
+                                </div> <!-- .card -->
+                            </div> <!-- .col-md -->
+                        </div> <!-- / .row -->
+                    </div>
+                </div> <!-- .row -->
+            </div> <!-- .container-fluid -->
+            <div class="modal fade modal-full" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
+                aria-hidden="true">
+                <button aria-label="" type="button" class="close px-2" data-dismiss="modal" aria-hidden="true">
+                    <span aria-hidden="true">×</span>
+                </button>
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <!-- If the person already exists indicate -->
+                        {% if userss_data %}
+                            <div class="form-row">
+                                <div class="card profile shadow col-md-12">
+                                    <div class="card-body">
+                                        <div class="card-title">
+                                            <strong>This individual already exists in the system</strong>
+                                        </div>
+                                        <div class="row align-items-center">
+                                            <div class="col-md-3 text-center mb-5">
+                                                <a href="#!" class="avatar avatar-xl">
+                                                    <img src="/app{{ userss_data.image }}" alt="..."
+                                                        class="avatar-img rounded-circle">
+                                                </a>
+                                            </div>
+                                            <div class="col-md-9">
+                                                <div class="row align-items-center">
+                                                    <div class="col-md-7">
+                                                        <div class="row">
+                                                            <h4 class="mb-1">{{ userss_data.name }}, {{ userss_data.age }}yrs</h4> 
+                                                            <span class="mx-2">{{ userss_data.gender }}</span>
+                                                        </div>
+                                                        <p class="small mb-3">
+                                                            <span class="py-1 px-2 badge badge-primary">{{ userss_data.combined_region_info }} Region</span>
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                                <div class="row mb-4">
+                                                    <div class="col-4">
+                                                        <p class="text-muted mb-0">Phone Number</p>
+                                                        <h6 class="mb-1">{{ userss_data.phone }}</h6>
+                                                    </div>
+                                                    <div class="col-4">
+                                                        <p class="text-muted mb-0">Occupation</p>
+                                                        <h6 class="mb-1">{{ userss_data.occupation }}</h6>
+                                                    </div>
+                                                    <div class="col-4">
+                                                        <p class="text-muted mb-0">Education Level</p>
+                                                        <h6 class="mb-1">{{ userss_data.education_level }}</h6>
+                                                    </div>
+                                                </div>
+                                                <div class="row mb-3">
+                                                    <div class="col-4">
+                                                        <p class="text-muted mb-0">Marital Status</p>
+                                                        <h6 class="mb-1">{{ userss_data.marital_status }}</h6>
+                                                    </div>
+                                                    <div class="col-4">
+                                                        <p class="text-muted mb-0">Dependents</p>
+                                                        <h6 class="mb-1">{{ userss_data.number_of_dependents }}</h6>
+                                                    </div>
+                                                    <div class="col-4">
+                                                        <p class="text-muted mb-0">Income (Kes)</p>
+                                                        <h6 class="mb-1">{{ userss_data.income|floatformat:2|intcomma }}</h6>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div> <!-- / .row- -->
+                                    </div> <!-- / .card-body - -->
+                                </div> <!-- / .card- -->
+                            </div>
+                        {% else %}
+                        <div class="modal-body">
+                            <h4 class="my-4 text-center">Add New Enumerations</h4>
+                            <form action="" method="post" enctype="multipart/form-data" id="enum_data">
+                                {% csrf_token %}
+                                <div class="form-row">
+                                    <div class="col-md-6 mb-3">
+                                        <label for="validationCustom3">Full name</label>
+                                        <input name="name" type="text" class="form-control {% if form.name.errors %}is-invalid{% endif %}" id="validationCustom3" placeholder="e.g. John" required>
+                                        <!-- Display error message for name -->
+                                        {% if form.name.errors %}
+                                            <div class="invalid-feedback">
+                                                {% for error in form.name.errors %}
+                                                    <div>{{ error }}</div>
+                                                {% endfor %}
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label for="validationCustom4">Phone Number</label>
+                                        <input name="phone" type="text" class="form-control {% if form.phone.errors %}is-invalid{% endif %}" id="validationCustom4" placeholder="e.g. 07xxx" required>
+                                        <!-- Display error message for phone -->
+                                        {% if form.phone.errors %}
+                                            <div class="invalid-feedback">
+                                                {% for error in form.phone.errors %}
+                                                    <div>{{ error }}</div>
+                                                {% endfor %}
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                    <div class="col-md-8 mb-3">
+                                        <label for="validationCustom0">Age</label>
+                                        <input name="age" type="number" class="form-control {% if form.age.errors %}is-invalid{% endif %}" id="validationCustom0" placeholder="e.g. 25" required>
+                                        <!-- Display error message for age -->
+                                        {% if form.age.errors %}
+                                            <div class="invalid-feedback">
+                                                {% for error in form.age.errors %}
+                                                    <div>{{ error }}</div>
+                                                {% endfor %}
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                    <div class="col-md-4 mb-3">
+                                        <label for="validationSelect2">Gender</label>
+                                        <select name="gender" class="form-control select2 {% if form.gender.errors %}is-invalid{% endif %}" id="validationSelect2" required>
+                                            <optgroup label="Select Gender">
+                                                <option selected value="Male">Male</option>
+                                                <option value="Female">Female</option>
+                                                <option value="Other">Other</option>
+                                            </optgroup>
+                                        </select>
+                                        <!-- Display error message for gender -->
+                                        {% if form.gender.errors %}
+                                            <div class="invalid-feedback">
+                                                {% for error in form.gender.errors %}
+                                                    <div>{{ error }}</div>
+                                                {% endfor %}
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                    <div class="col-md-12 mb-3">
+                                        <label for="validationCustom6">Occupation</label>
+                                        <input name="occupation" type="text" class="form-control {% if form.occupation.errors %}is-invalid{% endif %}" id="validationCustom6" placeholder="e.g. Software Developer" required>
+                                        <!-- Display error message for occupation -->
+                                        {% if form.occupation.errors %}
+                                            <div class="invalid-feedback">
+                                                {% for error in form.occupation.errors %}
+                                                    <div>{{ error }}</div>
+                                                {% endfor %}
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label for="validationSelect7">Educational Level</label>
+                                        <select name="education_level" class="form-control select2 {% if form.education_level.errors %}is-invalid{% endif %}" id="validationSelect7" required>
+                                            <optgroup label="Select Educational Level">
+                                                <option selected value="None">Not Specified</option>
+                                                <option value="Primary">Primary</option>
+                                                <option value="Secondary">Secondary</option>
+                                                <option value="Tertiary">Tertiary</option>
+                                            </optgroup>
+                                        </select>
+                                        <!-- Display error message for education_level -->
+                                        {% if form.education_level.errors %}
+                                            <div class="invalid-feedback">
+                                                {% for error in form.education_level.errors %}
+                                                    <div>{{ error }}</div>
+                                                {% endfor %}
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label for="validationSelect8">Marital Status</label>
+                                        <select name="marital_status" class="form-control select2 {% if form.marital_status.errors %}is-invalid{% endif %}" id="validationSelect8" required>
+                                            <optgroup label="Select Marital Status">
+                                                <option selected value="Single">Single</option>
+                                                <option value="Married">Married</option>
+                                                <option value="Divorced">Divorced</option>
+                                                <option value="Widowed">Widowed</option>
+                                            </optgroup>
+                                        </select>
+                                        <!-- Display error message for marital_status -->
+                                        {% if form.marital_status.errors %}
+                                            <div class="invalid-feedback">
+                                                {% for error in form.marital_status.errors %}
+                                                    <div>{{ error }}</div>
+                                                {% endfor %}
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                    <div class="col-md-8 mb-3">
+                                        <label for="validationCustom9">Income (Kes)</label>
+                                        <input name="income" type="number" class="form-control {% if form.income.errors %}is-invalid{% endif %}" id="validationCustom9" placeholder="e.g 100000" required>
+                                        <!-- Display error message for income -->
+                                        {% if form.income.errors %}
+                                            <div class="invalid-feedback">
+                                                {% for error in form.income.errors %}
+                                                    <div>{{ error }}</div>
+                                                {% endfor %}
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                    <div class="col-md-4 mb-3">
+                                        <label for="validationCustom10">Dependents</label>
+                                        <input name="dependents" type="number" class="form-control {% if form.dependents.errors %}is-invalid{% endif %}" id="validationCustom10" placeholder="e.g 2" required>
+                                        <!-- Display error message for dependents -->
+                                        {% if form.dependents.errors %}
+                                            <div class="invalid-feedback">
+                                                {% for error in form.dependents.errors %}
+                                                    <div>{{ error }}</div>
+                                                {% endfor %}
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                    <div class="col-md-12 mb-3">
+                                        <div class="row mb-5">
+                                            <div class="col-md-6">
+                                                <input name="image" type="file" class="form-control" id="file" accept="image/*" onchange="previewImage(event)">
+                                                <label class="custom-file-label" for="file">Select Image</label>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <button class="btn btn-primary" onclick="openCamera()" type="button">Open Camera</button>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <button class="btn btn-info" id="clearPreviewButton" onclick="clearPreview()" type="button">Clear</button>
+                                            </div>
+                                        </div>
+                                        <video id="cameraStream" width="100%" autoplay></video>
+                                        <div class="row align-items-center justify-content-center">
+                                            <button class="btn btn-success my-3 col-md-4" id="captureButton" style="display: none;" onclick="captureImage()" type="button">Capture Image</button>
+                                            <button class="btn btn-danger my-3 col-md-3 ml-2" id="closeCameraButton" style="display: none;" onclick="closeCamera()" type="button">Close Camera</button>
+                                        </div>
+                                        <canvas id="canvas" style="display: none;"></canvas>
+                                        <img id="imagePreview" src="#" alt="Image preview" class="img-fluid my-3" style="display: none;" />
+                                        <input type="hidden" name="camera_image" id="camera_image" value="">
+                                        <input type="hidden" name="camera_image_name" id="camera_image_name" value="">
+                                    </div>
+                                    <div class="col-md-12 d-flex mb-3 text-center">
+                                        <button type="submit" class="btn btn-block btn-primary">Save Enumeration</button>
+                                    </div>
+                                </div> <!-- /.form-row -->
+                            </form>
+                        {% endif %}
+                    </div>
+                </div>
+                
+            </div> <!-- small modal -->
+        </main> <!-- main -->
+    </div> <!-- .wrapper -->
+    <script src="{% static 'app/js/jquery.min.js' %}"></script>
+    <script src="{% static 'app/js/popper.min.js' %}"></script>
+    <script src="{% static 'app/js/moment.min.js' %}"></script>
+    <script src="{% static 'app/js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'app/js/simplebar.min.js' %}"></script>
+    <script src="{% static 'app/js/daterangepicker.js' %}"></script>
+    <script src="{% static 'app/js/jquery.stickOnScroll.js' %}"></script>
+    <script src="{% static 'app/js/tinycolor-min.js' %}"></script>
+    <script src="{% static 'app/js/config.js' %}"></script>
+    <script src="{% static 'app/js/d3.min.js' %}"></script>
+    <script src="{% static 'app/js/topojson.min.js' %}"></script>
+    <script src="{% static 'app/js/datamaps.all.min.js' %}"></script>
+    <script src="{% static 'app/js/datamaps-zoomto.js' %}"></script>
+    <script src="{% static 'app/js/datamaps.custom.js' %}"></script>
+    <script src="{% static 'app/js/Chart.min.js' %}"></script>
+    <script>
+        /* defind global options */
+        Chart.defaults.global.defaultFontFamily = base.defaultFontFamily;
+        Chart.defaults.global.defaultFontColor = colors.mutedColor;
+    </script>
+    <script src="{% static 'app/js/gauge.min.js' %}"></script>
+    <script src="{% static 'app/js/jquery.sparkline.min.js' %}"></script>
+    <script src="{% static 'app/js/apexcharts.min.js' %}"></script>
+    <script src="{% static 'app/js/apexcharts.custom.js' %}"></script>
+    <script src="{% static 'app/js/jquery.mask.min.js' %}"></script>
+    <script src="{% static 'app/js/select2.min.js' %}"></script>
+    <script src="{% static 'app/js/jquery.steps.min.js' %}"></script>
+    <script src="{% static 'app/js/jquery.validate.min.js' %}"></script>
+    <script src="{% static 'app/js/jquery.timepicker.js' %}"></script>
+    <script src="{% static 'app/js/dropzone.min.js' %}"></script>
+    <script src="{% static 'app/js/uppy.min.js' %}"></script>
+    <script src="{% static 'app/js/quill.min.js' %}"></script>
+    <script src="{% static 'app/js/jquery.dataTables.min.js' %}"></script>
+    <script src="{% static 'app/js/dataTables.bootstrap4.min.js' %}"></script>
+    <script src="{% static 'app/js/config.js' %}"></script>
+    <script src="{% static 'app/js/jquery.mask.min.js' %}"></script>
+    <script src="{% static 'app/js/select2.min.js' %}"></script>
+   
+
+    <script>
+
+
+       
+
+
+        function previewImage(event) {
+            var reader = new FileReader();
+            reader.onload = function () {
+                var output = document.getElementById('imagePreview');
+                output.src = reader.result;
+                output.style.display = 'block'; // Show the preview
+                output.style.width = '200px';
+                output.style.height = '200px';
+            };
+            reader.readAsDataURL(event.target.files[0]);
+            // Update the label text with the selected file name
+            document.querySelector(".custom-file-label").textContent = event.target.files[0].name;
+        }
+        $('#dataTable-1').DataTable(
+            {
+                autoWidth: true,
+                "lengthMenu": [
+                    [16, 32, 64, -1],
+                    [16, 32, 64, "All"]
+                ]
+            });
+        $('.select2').select2(
+            {
+                theme: 'bootstrap4',
+            });
+
+          
+
+
+            const video = document?.getElementById('cameraStream');
+            const canvas = document?.getElementById('canvas');
+            const imagePreview = document?.getElementById('imagePreview');
+            const captureButton = document?.getElementById('captureButton');
+            const closeCameraButton = document?.getElementById('closeCameraButton');
+        
+        function openCamera() {
+            console.log('openCamera called');
+            
+            navigator.mediaDevices.getUserMedia({ video: true })
+                .then(stream => {
+                    video.srcObject = stream;
+                    video.style.display = 'block';
+                    captureButton.style.display = 'block';
+                    closeCameraButton.style.display = 'block';
+                })
+                .catch(error => {
+                    console.error('Error accessing camera: ', error);
+                });
+                clearPreview()
+        }
+
+        function captureImage() {
+            const context = canvas.getContext('2d');
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            context.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+            const dataURL = canvas.toDataURL('image/png');
+            imagePreview.src = dataURL;
+            imagePreview.style.display = 'block';
+
+            video.style.display = 'none';
+            captureButton.style.display = 'none';
+            closeCameraButton.style.display = 'none';
+
+            let fileName = 'captured_image_' + new Date().getTime() + '.png';
+            document.querySelector(".custom-file-label").textContent = fileName;
+
+            document.getElementById('camera_image').value = dataURL;
+            document.getElementById('camera_image_name').value = fileName;
+
+            
+            
+            // Stop the video stream
+            let stream = video.srcObject;
+            let tracks = stream.getTracks();
+
+            tracks.forEach(function(track) {
+                track.stop();
+            });
+
+            video.srcObject = null;
+        }
+
+        function closeCamera() {
+            let stream = video.srcObject;
+            let tracks = stream.getTracks();
+
+            tracks.forEach(function(track) {
+                track.stop();
+            });
+
+            video.srcObject = null;
+            video.style.display = 'none';
+            captureButton.style.display = 'none';
+            closeCameraButton.style.display = 'none';
+        }
+
+        function clearPreview() {
+           
+            imagePreview.src = '#';
+            imagePreview.style.display = 'none';
+            document.getElementById('file').value = '';
+            document.querySelector(".custom-file-label").textContent = '';
+        }
+
+
+        $(document).ready(function() {
+            const modalShow = {{ modal_show|yesno:"true,false" }};
+
+            if (modalShow) {
+                $('.modal').modal('show');
+            }else{
+                video.style.display = 'none';
+                captureButton.style.display = 'none';
+                closeCameraButton.style.display = 'none';
+
+            }
+           
+
+            $('.modal').on('hidden.bs.modal', function (e) {
+                $.ajax({
+                    url: '{% url "clear-modal-session" %}',
+                    type: 'POST',
+                    headers: {
+                        'X-CSRFToken': '{{ csrf_token }}'
+                    },
+                    success: function(response) {
+                        if (response.success) {
+                            
+                            console.log('Session cleared successfully');
+                            window.location.href = '{% url "enumerator-dashboard" %}'
+                        } else {
+                            console.log('Failed to clear session');
+                        }
+                    }
+                });
+            });
+            
+         });
+
+
+    </script>
+    <script src="{% static 'app/js/apps.js' %}"></script>
+</body>
+
+</html>
